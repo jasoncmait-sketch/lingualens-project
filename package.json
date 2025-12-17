@@ -19,5 +19,7 @@
     "@vitejs/plugin-react": "^5.0.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0"
+    "@opennextjs/cloudflare": "^1.0.0",
+    "wrangler": "^3.0.0"
   }
 }
