@@ -1,5 +1,3 @@
 name = "lingualens-project"
 pages_build_output_dir = ".open-next/assets"
-
-[[compatibility_flags]]
-name = "nodejs_compat"
+compatibility_flags = ["nodejs_compat"]
