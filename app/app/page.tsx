@@ -1,9 +1,9 @@
-import { ChatInterface } from '../components/ChatInterface'; // Or whatever your main component is named
+import App from '../App';
 
 export default function Home() {
   return (
     <main>
-      <ChatInterface />
+      <App />
     </main>
   );
 }
