@@ -7,8 +7,8 @@ import { Annotation } from "../types";
  * 变量名推荐使用 VITE_API_KEY
  */
 // 1. 定义你的 Worker 地址
-const PROXY_URL = "https://gemini-proxy.jasoncmait.workers.dev
-"; 
+// 1. 定义你的 Worker 地址 (确保这一行最后有引号和分号)
+const PROXY_URL = "https://gemini-proxy.jasoncmait.workers.dev";
 
 // 2. 修改 getAiClient 
 const getAiClient = () => {
