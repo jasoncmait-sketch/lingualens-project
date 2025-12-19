@@ -1,32 +1,23 @@
 {
-  "name": "gemini-ai-studio-app",
-  "version": "0.1.0",
+  "name": "lingualens-&-studio",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "build:cf": "npx @opennextjs/cloudflare build"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
-    "next": "15.1.11",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "lucide-react": "^0.454.0"
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "@google/genai": "^1.33.0",
+    "lucide-react": "^0.561.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "1.14.6",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.14",
-    "typescript": "^5.6.3",
-    "wrangler": "^3.100.0"
-  },
-  "overrides": {
-    "next": "15.1.11"
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
   }
 }
