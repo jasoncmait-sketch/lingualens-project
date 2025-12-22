@@ -1,91 +1,23 @@
-import { Annotation } from "../types";
-
-const PROXY_URL = "https://gemini-proxy.jasoncmait.workers.dev";
+/**
+ * 1. 你的 CloudCone 服务器中转地址
+ * 如果 1Panel 配置了 SSL，用 https；如果是 IP 直连，用 http
+ */
+const PROXY_URL = "http://api.jasonx.site"; 
 
 /**
- * 基础请求函数 - 尝试切回 v1beta 
- * 因为 v1beta 对 responseMimeType 等新特性的支持最完整
+ * 2. 请求函数 - 路径建议用 v1beta，功能最全
  */
 const callGeminiApi = async (modelName: string, payload: any) => {
-  // 注意：这里改回了 v1beta
+  // 最终路径：http://IP/v1beta/models/gemini-2.0-flash:generateContent
   const endpoint = `${PROXY_URL}/v1beta/models/${modelName}:generateContent`;
 
   const response = await fetch(endpoint, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      // 注意：不要在这里传 API Key，如果你已经在服务器 Nginx 里处理了
+      // 或者保持现状，让 Worker/前端 传过去，Nginx 只负责透传
+    },
     body: JSON.stringify(payload)
   });
-
-  const responseData = await response.json().catch(() => ({}));
-
-  if (!response.ok) {
-    console.error("Gemini API Error:", responseData);
-    throw new Error(responseData.error?.message || `Status: ${response.status}`);
-  }
-
-  return responseData;
-};
-
-export const translateImageText = async (base64Image: string, mimeType: string = "image/jpeg"): Promise<Annotation[]> => {
-  const payload = {
-    contents: [{
-      parts: [
-        { inlineData: { mimeType, data: base64Image } },
-        { text: "Identify all text segments in this image and translate English to Simplified Chinese. Return as a JSON list with bounding boxes [ymin, xmin, ymax, xmax]." }
-      ]
-    }],
-    generationConfig: { // 1. 回到小驼峰
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: "array",
-        items: {
-          type: "object",
-          properties: {
-            original: { type: "string" },
-            translation: { type: "string" },
-            box_2d: { type: "array", items: { type: "integer" } }
-          },
-          required: ["original", "translation", "box_2d"]
-        }
-      }
-    },
-    systemInstruction: { // 2. 回到小驼峰
-      parts: [{ text: "You are an expert OCR and translation assistant." }]
-    }
-  };
-
-  try {
-    // 3. 使用 2.0 版本，这个模型通常在 v1beta 下功能最全
-    const data = await callGeminiApi("gemini-2.0-flash", payload);
-    const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-    return resultText ? JSON.parse(resultText) : [];
-  } catch (error) {
-    console.error("Translation Error:", error);
-    throw new Error("翻译失败，请检查 API 版本兼容性。");
-  }
-};
-
-/**
- * 编辑图像函数
- */
-export const editImageWithPrompt = async (base64Image: string, prompt: string, mimeType: string = "image/jpeg"): Promise<string> => {
-  const payload = {
-    contents: [{
-      parts: [
-        { inlineData: { mimeType, data: base64Image } },
-        { text: prompt }
-      ]
-    }]
-  };
-
-  try {
-    const data = await callGeminiApi("gemini-2.0-flash", payload);
-    const parts = data.candidates?.[0]?.content?.parts || [];
-    for (const part of parts) {
-      if (part.inlineData?.data) return part.inlineData.data;
-    }
-    return parts[0]?.text || "No response content";
-  } catch (error) {
-    throw new Error("编辑图片失败。");
-  }
-};
+  // ... 后续逻辑保持不变
